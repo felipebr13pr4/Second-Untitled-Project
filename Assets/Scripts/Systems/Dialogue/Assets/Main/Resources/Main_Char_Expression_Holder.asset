@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a37a363cce15334ea40247805112d2d, type: 3}
+  m_Name: Main_Char_Expression_Holder
+  m_EditorClassIdentifier: Assembly-CSharp::ExpressionsHolder
+  m_sprites:
+  - m_name: None
+    m_portrait: {fileID: 0}
+    m_fullBody: {fileID: 0}
+    m_expression: 0
+  - m_name: Neutral
+    m_portrait: {fileID: -4467276488463903938, guid: 017750c890dcb5948af62d3ef02e2d5f, type: 3}
+    m_fullBody: {fileID: 2186774177333103329, guid: fad648d5a2cd29b4a911cc6fd35f8df1, type: 3}
+    m_expression: 1
+  - m_name: Happy
+    m_portrait: {fileID: -106477887785585601, guid: 21ad17dce86752646ba7d2de6a8cdf78, type: 3}
+    m_fullBody: {fileID: -1793321047422111715, guid: 67c5e692fed9fc147927c7ccfe911a09, type: 3}
+    m_expression: 2
+  - m_name: Sad
+    m_portrait: {fileID: 2961333195273268079, guid: 030eee03da18d714ea34295d6bb97f5f, type: 3}
+    m_fullBody: {fileID: -7289623457434846373, guid: 4f99e49c33b626c4bbf98240e1728fdc, type: 3}
+    m_expression: 3
