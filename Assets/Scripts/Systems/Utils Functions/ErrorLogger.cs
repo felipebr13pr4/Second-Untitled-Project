@@ -4,7 +4,8 @@ public class ErrorLogger : MonoBehaviour
 {
     public enum ErrorType
     {
-        // Put a error here when it is necessary
+        NoneType = 0,
+        // Put a error here when it is necessary (and will be repeated)
     }
 
     [System.Diagnostics.Conditional("UNITY_EDITOR")]
@@ -54,6 +55,12 @@ public class ErrorLogger : MonoBehaviour
 
         switch (errorIndex)
         {
+
+            case (int)ErrorType.NoneType:
+                Debug.LogError("A type enum has been received yet it is none. Make sure that does not happen.\n" +
+                    "Extra: " + varInfo +
+                    "Received error index: " + errorIndex);
+                return;
 
             default:
                 Debug.LogError("Error index out of bounds, please make sure its within them.\n" +
