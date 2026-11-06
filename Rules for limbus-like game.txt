@@ -1,0 +1,134 @@
+rules{
+
+rope
+eMax = -35 (changeable for fights)
+pMax = 65
+eMax - pMax (range of value)
+
+start 0
+rope = eMax = enemy wins, 
+rope = pMax = you win.
+
+
+mid beats high.
+high beats low.
+low beats mid.
+
+low -> mid -> high -> low
+
+
+t = attack type
+power = clash power
+points = amount of rope won in clash.
+points req = amount of rope used for the skill
+
+if clashing type beats the opponent's type, +50% power. (low rounding, 1.5 = 1. 1.9 = 1. 1.999 = 1.)
+
+
+If a clash results in a tie, flip a "rope coin".
+The rope coin depends on the current rope value.
+-34 = 99% of winning.
+59 = 1% of winning.
+0 = 65% of winning.
+
+
+Points from skills increase or decrease in value depending on rope value. Fair rounding (1.1 = 1, 1.9 = 2, 1.4 = 1, 1.6 = 2, 1.5 = 1 (exacts if ever existents like exactlyyy 1.5, really unprob with floats tho))
+0 = 0% increase.
+For each positive point, decrease value by 1.5% (max 75%).
+For each negative point, increase value by 1.5% (max 40%).
+
+For enemies, it is the opposite.
+For each positive point, increase value by 1.5% (max 75%).
+For each negative point, decrease value by 1.5% (max 40%).
+
+Enemies have the same rules for points but are opposite. So instead of gaining 5, they gain -5 (bringing them closer to their goal).
+
+Skills power have shifted bias depending on rope value. Fair rounding.
+Player {
+For each positive point, increase bias by 0.5% (max 35%).
+For each negative point, decrease bias by 1% (max 15%).
+}
+Enemy {
+For each positive point, increase bias by 1% (max 10%).
+For each negative point, decrease bias by 1% (max 10%).
+}
+
+Minimum points gained from a winning clash is always 1.
+
+Both opponents have 6 skills.
+Both opponents draw random skills for each slot.
+The player chooses which slot fights with the enemy's slot.
+
+For example. (example with halved skill slots for simplicity)
+{
+Player draws S1, S2, S3.
+Enemy draws S4, S5, S6.
+
+You can do...
+Player's S1 (First slot)
+attacks
+enemy S6 (Third slot)
+
+Player's S2 (Second slot)
+attacks
+enemy S5 (Second slot)
+
+Player S3 (Third slot)
+attacks
+Enemy S4 (First slot)
+
+}
+
+}
+
+skills{
+
+skill 1
+t: high
+power: 3-6
+points: 4
+
+skill 2
+t: mid
+power: 3-6
+points: 4
+
+skill 3
+t: low
+power: 3-6
+points: 4
+
+skill 4
+t: high
+power: 3-6, 3-6
+points: 2
+
+skill 5
+t: mid
+power: 3-6, 3-6
+points: 2
+
+skill 6
+t: low
+power: 3-6, 3-6
+points: 2
+
+skill 7
+t: high
+power: 3-6
+points: 1-4
+Special: For each 7 rope points, increase power by 1. (max 3)
+
+skill 8
+t: mid
+power: 3-6
+points: 1-4
+Special: For each 7 rope points, increase power by 1. (max 3)
+
+skill 9
+t: low
+power: 3-6
+points: 1-4
+Special: For each 7 rope points, increase power by 1. (max 3)
+
+}
