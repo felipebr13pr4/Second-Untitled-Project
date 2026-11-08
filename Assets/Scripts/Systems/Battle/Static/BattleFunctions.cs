@@ -1,5 +1,6 @@
 using UnityEngine;
 using static BattleDefaultValues;
+using static MathFunctions;
 
 public static class BattleFunctions
 {
@@ -19,8 +20,8 @@ public static class BattleFunctions
         {
             // Apply specials here.
 
-            int playerResult = RollDice(playerSkill.Dice);
-            int enemyResult = RollDice(enemySkill.Dice);
+            int playerResult = RollRopeBiasDice(rope.IsLeading(BattleSide.Player), rope, MinClashBias, MaxClashBias, playerSkill.Dice);
+            int enemyResult = RollRopeBiasDice(rope.IsLeading(BattleSide.Enemy), rope, MinClashBias, MaxClashBias, enemySkill.Dice);
 
             ErrorLogger.DebugLog("------------");
             ErrorLogger.LogVar(playerResult, nameof(playerResult));
@@ -50,12 +51,12 @@ public static class BattleFunctions
             }
 
             SkillData winnerSkill = result.Winner == BattleSide.Player ? playerSkill : enemySkill;
-            int pointsGain = RollDice(winnerSkill.Points);
+            
+            int pointsGain = RollRopeBiasDice(
+                !rope.IsLeading(result.Winner),
+                rope, MinPointsBias, MaxPointsBias, winnerSkill.Points);
             int pointsCost = RollDice(winnerSkill.PointsRequired);
 
-            // pointsgain/cost reduction would go here.
-
-            pointsGain = Mathf.Max(pointsGain, 1);
             pointsCost = Mathf.Max(pointsCost, 1);
 
             result = new(result.Winner, result.WasTie, pointsGain, pointsCost);
@@ -65,11 +66,11 @@ public static class BattleFunctions
             return result;
         }
 
-        private static int RollDice(params DieData[] diesData)
+        private static int RollDice(params DieData[] dice)
         {
             int result = 0;
 
-            foreach (DieData die in diesData)
+            foreach (DieData die in dice)
             {
                 result += die.BaseValue + Random.Range(die.RangeValue.Min, die.RangeValue.Max + 1);
                 ErrorLogger.DebugLog($"Current result of rolling dies: {result}");
@@ -77,10 +78,29 @@ public static class BattleFunctions
             return result;
         }
 
+        private static int RollBiasDice(float bias, bool skewHigh, params DieData[] dice)
+        {
+            int result = 0;
+
+            foreach (DieData die in dice)
+            {
+                result += die.BaseValue + SkewedRandom(die.RangeValue.Min, die.RangeValue.Max, bias, skewHigh);
+                ErrorLogger.DebugLog($"Current result of rolling dies: {result}");
+            }
+            return result;
+        }
+
+        private static int RollRopeBiasDice(bool skewHigh, BattleRope rope, float minPercentage = 0, float maxPercentage = 1, params DieData[] dice)
+        {
+            float bias = 1 + (rope.RopePercentage(minPercentage, maxPercentage) * DiceBiasMultiplication);
+
+            return RollBiasDice(bias, skewHigh, dice);
+        }
+
         private static int CheckBoostAdvantage(SkillType usingSkill, SkillType clashingSkill, float value)
         {
             if (HasAdvantage(usingSkill, clashingSkill))
-                return Mathf.FloorToInt(value * BattleDefaultValues.AdvantageBoost);
+                return Mathf.FloorToInt(value * AdvantageBoost);
             else
                 return (int)value;
         }
@@ -94,7 +114,8 @@ public static class BattleFunctions
         {
             ErrorLogger.DebugLog("------------");
             float winInt = Random.value;
-            float playerChance = Mathf.Clamp(Mathf.InverseLerp(rope.Max, rope.Min, rope.Value), MinFlipCoinChance, MaxFlipCoinChance);
+            
+            float playerChance = GetPercentageInLine(rope.Max, rope.Min, rope.Value, MinFlipCoin, MaxFlipCoin);
             ErrorLogger.LogVar(playerChance, nameof(playerChance));
 
             BattleSide winner = playerChance > winInt ? BattleSide.Player : BattleSide.Enemy;
@@ -102,8 +123,11 @@ public static class BattleFunctions
             ErrorLogger.DebugLog("------------");
             ErrorLogger.LogVar(winInt, nameof(winInt));
             ErrorLogger.LogVar(winner, nameof(winner));
+            ErrorLogger.DebugLog("------------");
 
             return winner;
         }
+
+        
     }
 }

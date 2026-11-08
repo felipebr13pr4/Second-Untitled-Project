@@ -28,6 +28,7 @@ public class BattleRope
     public int Min => m_min;
     [SerializeField] private int m_max;
     public int Max => m_max;
+    public bool IsRopePos => m_value > 0;
 
     public static event Action<int, int> OnValueChange;
     public static event Action<BattleSide> OnWinner;
@@ -44,8 +45,6 @@ public class BattleRope
     }
     public void Multiply(BattleSide side, float value)
     {
-        bool isRopePositive = m_value > 0;
-
         if (side == BattleSide.None)
         {
             ErrorLogger.LogErrorType(ErrorLogger.ErrorType.NoneType);
@@ -59,14 +58,34 @@ public class BattleRope
             return;
         }
         else if (side == BattleSide.Player)
-            ManageMultiplication(isRopePositive, value);
+            ManageMultiplication(IsRopePos, value);
         else
-            ManageMultiplication(!isRopePositive, value);
+            ManageMultiplication(!IsRopePos, value);
     }
     private void ManageMultiplication(bool shouldMultiply, float value)
     {
         Value = shouldMultiply ? (int)MathF.Round(m_value * value) :
                 (int)MathF.Round(m_value / value);
+    }
+
+    public float RopePercentage(float minPercentage = 0, float maxPercentage = 1)
+    {
+        return MathFunctions.GetPercentageInLine(0, IsRopePos ? Max : Min, Value, minPercentage, maxPercentage);
+    }
+
+    // Note: at 0 IsLeading(Enemy) is true because IsRopePos uses <.
+    public bool IsLeading(BattleSide side)
+    {
+        bool result = false;
+
+        if (side == BattleSide.Player)
+            result = IsRopePos;
+        else if (side == BattleSide.Enemy)
+            result = !IsRopePos;
+        else
+            ErrorLogger.LogErrorType(ErrorLogger.ErrorType.NoneType);
+
+        return result;
     }
 
     public BattleRope(BattleConfig config)

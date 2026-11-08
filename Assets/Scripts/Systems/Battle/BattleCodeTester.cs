@@ -35,6 +35,9 @@ public class BattleCodeTester : MonoBehaviour
         ErrorLogger.DebugLog("------------");
 
 
+        //PullTest(0, BattleSide.Player, 40);
+        //TestAverage(1000, m_skill1, m_skill1);
+
         //TestChanging();
 
         //TestAdvantages();
@@ -46,14 +49,15 @@ public class BattleCodeTester : MonoBehaviour
     }
 
     [HideInCallstack]
-    private void PullTest(int i, BattleSide side, int value)
+    private void PullTest(int testNumber, BattleSide side, int value)
     {
         ErrorLogger.DebugLog("------------");
-        ErrorLogger.DebugLog($"Test number: {i}");
+        ErrorLogger.DebugLog($"Test number: {testNumber}");
         m_battleRope.Pull(side, value);
         ErrorLogger.LogVar(m_battleRope.Value, nameof(m_battleRope.Value));
         ErrorLogger.DebugLog("------------");
     }
+
     [HideInCallstack]
     private void MultiplyTest(int i, BattleSide side, float value)
     {
@@ -63,7 +67,70 @@ public class BattleCodeTester : MonoBehaviour
         ErrorLogger.LogVar(m_battleRope.Value, nameof(m_battleRope.Value));
         ErrorLogger.DebugLog("------------");
     }
-    
+
+    private void TestAverage(int times, SkillData skill1, SkillData skill2)
+    {
+        int playerWins = 0;
+        int enemyWins = 0;
+        int ties = 0;
+        float allPointsPlayer = 0;
+        float allCostsPlayer = 0;
+        float allPointsEnemy = 0;
+        float allCostsEnemy = 0;
+
+        for (int i = 0; i < times; i++)
+        {
+            ClashResult result = new();
+            result = Clash(skill1, skill2, m_battleRope);
+
+            if (result.Winner == BattleSide.Player)
+                playerWins++;
+            else if (result.Winner == BattleSide.Enemy)
+                enemyWins++;
+            else
+                ErrorLogger.LogErrorType(ErrorLogger.ErrorType.NoneType);
+
+            if (result.WasTie)
+                ties++;
+
+            if (result.Winner == BattleSide.Player)
+                allPointsPlayer += result.PointsGain;
+            else if (result.Winner == BattleSide.Enemy)
+                allPointsEnemy += result.PointsGain;
+            else
+                ErrorLogger.LogErrorType(ErrorLogger.ErrorType.NoneType);
+
+            if (result.Winner == BattleSide.Player)
+                allCostsPlayer += result.PointsCost;
+            else if (result.Winner == BattleSide.Enemy)
+                allCostsEnemy += result.PointsCost;
+            else
+                ErrorLogger.LogErrorType(ErrorLogger.ErrorType.NoneType);
+        }
+
+        ErrorLogger.LogVar(playerWins, nameof(playerWins));
+        ErrorLogger.LogVar(enemyWins, nameof(enemyWins));
+        ErrorLogger.LogVar(ties, nameof(ties));
+        if (playerWins != 0)
+        {
+            ErrorLogger.LogVar(allPointsPlayer / playerWins, nameof(allPointsPlayer));
+            ErrorLogger.LogVar(allCostsPlayer / playerWins, nameof(allCostsPlayer));
+        }
+        else
+        {
+            ErrorLogger.DebugLog("No player wins so can't average points gain and cost because of the need of dividing.");
+        }
+        if (enemyWins != 0)
+        {
+            ErrorLogger.LogVar(allPointsEnemy / enemyWins, nameof(allPointsEnemy));
+            ErrorLogger.LogVar(allCostsEnemy / enemyWins, nameof(allCostsEnemy));
+        }
+        else
+        {
+            ErrorLogger.DebugLog("No enemy wins so can't average points gain and cost because of the need of dividing.");
+        }
+    }
+
     private void TestAdvantages()
     {
         ErrorLogger.DebugLog($"Has advantage (low Vs Mid)? {HasAdvantage(SkillType.Low, SkillType.Mid)}");

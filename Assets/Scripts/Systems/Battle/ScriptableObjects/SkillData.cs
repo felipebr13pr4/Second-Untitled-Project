@@ -26,6 +26,14 @@ public class SkillData : ScriptableObject
 
             CheckMinViolation(ref m_dies[i]);
         }
+
+        if (m_pointsRequired.BaseValue < 0)
+            m_pointsRequired = new(0, new(m_pointsRequired.RangeValue.Min, m_pointsRequired.RangeValue.Max));
+        else if (m_pointsRequired.RangeValue.Max < 0)
+            m_pointsRequired = new(m_pointsRequired.BaseValue, new(m_pointsRequired.RangeValue.Min, 0));
+        else if (m_pointsRequired.RangeValue.Min < 0)
+            m_pointsRequired = new(m_pointsRequired.BaseValue, new(0, m_pointsRequired.RangeValue.Max));
+
         CheckMinViolation(ref m_points);
         CheckMinViolation(ref m_pointsRequired);
     }
