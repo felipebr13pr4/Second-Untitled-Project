@@ -11,6 +11,8 @@ public class SkillData : ScriptableObject
     public DieData Points => m_points;
     [SerializeField] private DieData m_pointsRequired;
     public DieData PointsRequired => m_pointsRequired;
+    [SerializeField] private SkillEffect[] m_effects;
+    public SkillEffect[] Effects => m_effects;
 
     private void OnValidate()
     {

@@ -39,4 +39,24 @@ public static class MathFunctions
     {
         return Mathf.Clamp(Mathf.InverseLerp(minLine, maxLine, value), minResult, maxResult);
     }
+
+    public static float GetTotalOfArray(float[] array)
+    {
+        float result = 0;
+
+        foreach (float i in array)
+            result += i;
+
+        return result;
+    }
+
+    public static int GetTotalOfArray(int[] array)
+    {
+        int result = 0;
+
+        foreach (int i in array)
+            result += i;
+
+        return result;
+    }
 }

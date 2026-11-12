@@ -36,20 +36,14 @@ public class BattleRope
     public void Set(int value) => Value = value;
     public void Pull(BattleSide side, int value)
     {
-        if (side == BattleSide.None)
-        {
-            ErrorLogger.LogErrorType(ErrorLogger.ErrorType.NoneType);
+        if (BattleFunctions.Misc.CheckForErrorNone(side))
             return;
-        }
         Value += side == BattleSide.Player ? value : -value;
     }
     public void Multiply(BattleSide side, float value)
     {
-        if (side == BattleSide.None)
-        {
-            ErrorLogger.LogErrorType(ErrorLogger.ErrorType.NoneType);
+        if (BattleFunctions.Misc.CheckForErrorNone(side))
             return;
-        }
         else if (m_value == 0)
             return;
         else if (value <= 0)

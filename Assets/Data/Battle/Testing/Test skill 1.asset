@@ -22,9 +22,9 @@ MonoBehaviour:
     m_baseValue: 0
     m_rangeValue:
       m_min: 0
-      m_max: 0
+      m_max: 10
   m_pointsRequired:
     m_baseValue: 0
     m_rangeValue:
       m_min: 0
-      m_max: 0
+      m_max: 10

@@ -5,6 +5,7 @@ public class ErrorLogger : MonoBehaviour
     public enum ErrorType
     {
         NoneType = 0,
+        NegativeArrayEntry = 1,
         // Put a error here when it is necessary (and will be repeated)
     }
 
@@ -50,6 +51,31 @@ public class ErrorLogger : MonoBehaviour
         HandleLogError((int)errorType, varInfo);
     }
 
+    [System.Diagnostics.Conditional("UNITY_EDITOR")]
+    [HideInCallstack]
+    public static void LogArray(float[] array)
+    {
+        string arrayText = "";
+        arrayText += "[";
+        foreach (float entry in array)
+            arrayText += entry.ToString() + ", ";
+        arrayText += "]";
+        DebugLog(arrayText);
+    }
+
+    [System.Diagnostics.Conditional("UNITY_EDITOR")]
+    [HideInCallstack]
+    public static void LogArray(int[] array)
+    {
+        string arrayText = "";
+        arrayText += "[";
+        foreach (int entry in array)
+            arrayText += entry.ToString() + ", ";
+        arrayText += "]";
+        DebugLog(arrayText);
+    }
+
+
     private static void HandleLogError(int errorIndex, string varInfo)
     {
 
@@ -57,7 +83,13 @@ public class ErrorLogger : MonoBehaviour
         {
 
             case (int)ErrorType.NoneType:
-                Debug.LogError("A type enum has been received yet it is none. Make sure that does not happen.\n" +
+                Debug.LogError("A type enum has been received yet it is none. Make sure to edit all unedited enums or to find the reason why.\n" +
+                    "Extra: " + varInfo +
+                    "Received error index: " + errorIndex);
+                return;
+
+            case (int)ErrorType.NegativeArrayEntry:
+                Debug.LogError("A array entry has been received yet it is negative. Make sure all array entries are not negative." +
                     "Extra: " + varInfo +
                     "Received error index: " + errorIndex);
                 return;

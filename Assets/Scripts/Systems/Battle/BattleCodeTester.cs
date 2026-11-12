@@ -1,4 +1,5 @@
 # if UNITY_EDITOR
+using System.Linq;
 using UnityEngine;
 using static BattleFunctions.Skill;
 
@@ -6,11 +7,8 @@ public class BattleCodeTester : MonoBehaviour
 {
     [SerializeField] private BattleConfig m_config;
     [SerializeField] private BattleRope m_battleRope;
-    [SerializeField] private SkillData m_skill1;
-    [SerializeField] private SkillData m_skill2;
-    [SerializeField] private SkillData m_skill3;
-    [SerializeField] private SkillData m_skill4;
-
+    [SerializeField] private SkillData[] m_skills;
+    private ClashContext.DiceContext m_diceContext = new();
 
     private void OnEnable()
     {
@@ -34,9 +32,17 @@ public class BattleCodeTester : MonoBehaviour
         ErrorLogger.DebugLog("------------");
         ErrorLogger.DebugLog("------------");
 
+        TestDice();
+        Clash(m_skills[0], m_skills[6], m_battleRope);
 
-        //PullTest(0, BattleSide.Player, 40);
-        //TestAverage(1000, m_skill1, m_skill1);
+        //Clash(m_skills[0], m_skills[4], m_battleRope);
+
+        //Clash(m_skills[5], m_skills[4], m_battleRope);
+        //PullTest(0, BattleSide.Player, 45);
+        //Clash(m_skills[5], m_skills[4], m_battleRope);
+
+        //PullTest(0, BattleSide.Player, 45);
+        //TestAverage(1000, m_skills[0], m_skills[0]);
 
         //TestChanging();
 
@@ -66,6 +72,61 @@ public class BattleCodeTester : MonoBehaviour
         m_battleRope.Multiply(side, value);
         ErrorLogger.LogVar(m_battleRope.Value, nameof(m_battleRope.Value));
         ErrorLogger.DebugLog("------------");
+    }
+
+    private void TestDice()
+    {
+        int[] a = { 1, 2 };
+        int[] b = { 9 };
+        int[] c = { 5, 6 };
+        int[] d = { 6 };
+
+        m_diceContext.AddDice(BattleSide.Player, a);
+        ErrorLogger.LogVar(m_diceContext.PlayerDiceRolled.Count, nameof(m_diceContext.PlayerDiceRolled.Count));
+        ErrorLogger.LogArray(m_diceContext.PlayerDiceRolled.ToArray());
+
+
+        m_diceContext.AddDiceAt(BattleSide.Player, b, 1);
+        ErrorLogger.LogVar(m_diceContext.PlayerDiceRolled.Count, nameof(m_diceContext.PlayerDiceRolled.Count));
+        ErrorLogger.LogArray(m_diceContext.PlayerDiceRolled.ToArray());
+
+
+        m_diceContext.AddDiceAt(BattleSide.Player, c, 1);
+        ErrorLogger.LogVar(m_diceContext.PlayerDiceRolled.Count, nameof(m_diceContext.PlayerDiceRolled.Count));
+        ErrorLogger.LogArray(m_diceContext.PlayerDiceRolled.ToArray());
+
+
+        m_diceContext.RemoveLastDie(BattleSide.Player);
+        ErrorLogger.LogVar(m_diceContext.PlayerDiceRolled.Count, nameof(m_diceContext.PlayerDiceRolled.Count));
+        ErrorLogger.LogArray(m_diceContext.PlayerDiceRolled.ToArray());
+
+
+        m_diceContext.RemoveDiceAt(BattleSide.Player, 0);
+        ErrorLogger.LogVar(m_diceContext.PlayerDiceRolled.Count, nameof(m_diceContext.PlayerDiceRolled.Count));
+        ErrorLogger.LogArray(m_diceContext.PlayerDiceRolled.ToArray());
+
+
+        m_diceContext.RemoveDiceByValue(BattleSide.Player, d);
+        ErrorLogger.LogVar(m_diceContext.PlayerDiceRolled.Count, nameof(m_diceContext.PlayerDiceRolled.Count));
+        ErrorLogger.LogArray(m_diceContext.PlayerDiceRolled.ToArray());
+
+
+        m_diceContext.AddDice(BattleSide.None, d);
+        ErrorLogger.LogVar(m_diceContext.PlayerDiceRolled.Count, nameof(m_diceContext.PlayerDiceRolled.Count));
+        ErrorLogger.LogArray(m_diceContext.PlayerDiceRolled.ToArray());
+
+
+        ErrorLogger.LogVar(m_diceContext.EnemyDiceRolled, nameof(m_diceContext.EnemyDiceRolled));
+        ErrorLogger.LogArray(m_diceContext.EnemyDiceRolled.ToArray());
+
+
+        m_diceContext.RemoveLastDie(BattleSide.Enemy);
+        ErrorLogger.LogVar(m_diceContext.PlayerDiceRolled.Count, nameof(m_diceContext.PlayerDiceRolled.Count));
+        ErrorLogger.LogArray(m_diceContext.PlayerDiceRolled.ToArray());
+
+        ErrorLogger.LogVar(m_diceContext.EnemyDiceRolled.Count, nameof(m_diceContext.EnemyDiceRolled.Count));
+        ErrorLogger.LogArray(m_diceContext.EnemyDiceRolled.ToArray());
+
     }
 
     private void TestAverage(int times, SkillData skill1, SkillData skill2)
@@ -169,22 +230,22 @@ public class BattleCodeTester : MonoBehaviour
     {
         ErrorLogger.DebugLog("Initiating first clash test.");
         ErrorLogger.DebugLog("------------");
-        Clash(m_skill1, m_skill2, m_battleRope);
+        Clash(m_skills[0], m_skills[1], m_battleRope);
         ErrorLogger.DebugLog("------------");
         ErrorLogger.DebugLog("------------");
         ErrorLogger.DebugLog("Initiating second clash test.");
         ErrorLogger.DebugLog("------------");
-        Clash(m_skill2, m_skill1, m_battleRope);
+        Clash(m_skills[1], m_skills[0], m_battleRope);
         ErrorLogger.DebugLog("------------");
         ErrorLogger.DebugLog("------------");
         ErrorLogger.DebugLog("Initiating third clash test.");
         ErrorLogger.DebugLog("------------");
-        Clash(m_skill3, m_skill4, m_battleRope);
+        Clash(m_skills[2], m_skills[3], m_battleRope);
         ErrorLogger.DebugLog("------------");
         ErrorLogger.DebugLog("------------");
         ErrorLogger.DebugLog("Initiating fourth clash test.");
         ErrorLogger.DebugLog("------------");
-        Clash(m_skill4, m_skill3, m_battleRope);
+        Clash(m_skills[3], m_skills[2], m_battleRope);
     }
 
     private void TestFlipCoin()

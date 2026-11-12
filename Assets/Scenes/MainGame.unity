@@ -692,10 +692,14 @@ MonoBehaviour:
     m_value: 0
     m_min: 0
     m_max: 0
-  m_skill1: {fileID: 11400000, guid: 75324c4551f5529448c85415684dabc8, type: 2}
-  m_skill2: {fileID: 11400000, guid: 2cb4c4e479a5de745a8976efb2b501e9, type: 2}
-  m_skill3: {fileID: 11400000, guid: c8ed61b4bb852ed4f83d07097569c90b, type: 2}
-  m_skill4: {fileID: 11400000, guid: 0946a6f4ad6fcb54e97bc1b84d9d206a, type: 2}
+  m_skills:
+  - {fileID: 11400000, guid: 75324c4551f5529448c85415684dabc8, type: 2}
+  - {fileID: 11400000, guid: 2cb4c4e479a5de745a8976efb2b501e9, type: 2}
+  - {fileID: 11400000, guid: c8ed61b4bb852ed4f83d07097569c90b, type: 2}
+  - {fileID: 11400000, guid: 0946a6f4ad6fcb54e97bc1b84d9d206a, type: 2}
+  - {fileID: 11400000, guid: e5f0ea6016bbaad44aa5b0265d3c07fb, type: 2}
+  - {fileID: 11400000, guid: d27ca6b612ee2b74da8d94f429509d1b, type: 2}
+  - {fileID: 11400000, guid: 732c15be1c378814b94f47877d2ad454, type: 2}
 --- !u!4 &978429223
 Transform:
   m_ObjectHideFlags: 0
