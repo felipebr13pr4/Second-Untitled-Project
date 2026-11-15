@@ -13,18 +13,19 @@ MonoBehaviour:
   m_Name: Test skill 1
   m_EditorClassIdentifier: Assembly-CSharp::SkillData
   m_type: 1
-  m_dies:
+  m_dice:
   - m_baseValue: 0
     m_rangeValue:
       m_min: 0
-      m_max: 10
+      m_max: 5
   m_points:
     m_baseValue: 0
     m_rangeValue:
       m_min: 0
-      m_max: 10
+      m_max: 5
   m_pointsRequired:
     m_baseValue: 0
     m_rangeValue:
       m_min: 0
       m_max: 10
+  m_effects: []

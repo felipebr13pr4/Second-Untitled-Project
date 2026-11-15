@@ -1,7 +1,7 @@
 using System.Linq;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New DiceLog Effect", menuName = "Battle/Effects/DiceLogEffect")]
+[CreateAssetMenu(fileName = "New DiceLog Effect", menuName = "Battle/Effects/Dice Log")]
 public class DiceLogEffect : SkillEffect
 {
     public override void Execute(ClashContext context, BattleSide owner)

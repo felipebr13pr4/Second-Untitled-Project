@@ -32,8 +32,11 @@ public class BattleCodeTester : MonoBehaviour
         ErrorLogger.DebugLog("------------");
         ErrorLogger.DebugLog("------------");
 
-        TestDice();
-        Clash(m_skills[0], m_skills[6], m_battleRope);
+        //Clash(m_skills[7], m_skills[7], m_battleRope);
+        Clash(m_skills[3], m_skills[8], m_battleRope);
+
+        //TestDice();
+        //Clash(m_skills[0], m_skills[6], m_battleRope);
 
         //Clash(m_skills[0], m_skills[4], m_battleRope);
 

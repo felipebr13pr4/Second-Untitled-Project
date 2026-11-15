@@ -69,10 +69,24 @@ public class ErrorLogger : MonoBehaviour
     {
         string arrayText = "";
         arrayText += "[";
-        foreach (int entry in array)
-            arrayText += entry.ToString() + ", ";
+        if (array.Length != 1)
+            foreach (int entry in array)
+                arrayText += entry.ToString() + ", ";
+        else
+            arrayText += array[0];
         arrayText += "]";
         DebugLog(arrayText);
+    }
+
+    [HideInCallstack]
+    public static bool CheckForErrorNegativeArray(int lenght)
+    {
+        if (lenght < 0)
+        {
+            LogErrorType(ErrorType.NegativeArrayEntry);
+            return true;
+        }
+        return false;
     }
 
 

@@ -9,6 +9,7 @@ public enum BattleTriggerActions
     ClashWin = 1,
     ClashLose = 2,
     ClashTie = 9,
+    AfterPointDiceRoll = 12,
     SkillEnd = 4,
     TurnEnd = 8,
     CombatEnd = 6,

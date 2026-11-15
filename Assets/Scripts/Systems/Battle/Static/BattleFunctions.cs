@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static BattleDefaultValues;
 using static MathFunctions;
@@ -27,6 +28,8 @@ public static class BattleFunctions
         {
             if (Misc.CheckForErrorNone(side))
                 return;
+
+            context.SetCurrentTrigger(trigger);
             SkillEffect[] effects = side == BattleSide.Player ? context.PlayerSkill.Effects : context.EnemySkill.Effects;
             foreach (SkillEffect effect in effects)
             {
@@ -48,13 +51,10 @@ public static class BattleFunctions
 
             FireEffects(BattleTriggerActions.Use, context);
 
-            DiceResult playerClashDie = RollRopeBiasDice(rope.IsLeading(BattleSide.Player), rope, MinClashBias, MaxClashBias, playerSkill.Dice);
-            DiceResult enemyClashDie = RollRopeBiasDice(rope.IsLeading(BattleSide.Enemy), rope, MinClashBias, MaxClashBias, enemySkill.Dice);
-
-            context.AddPower(BattleSide.Player, playerClashDie.TotalValue);
-            context.AddPower(BattleSide.Enemy, enemyClashDie.TotalValue);
-            context.DiceClash.AddDice(BattleSide.Player, playerClashDie.RolledValues);
-            context.DiceClash.AddDice(BattleSide.Enemy, enemyClashDie.RolledValues);
+            context.DiceClash.AddDice(BattleSide.Player, RollRopeBiasDice(rope.IsLeading(BattleSide.Player), rope, MinClashBias, MaxClashBias, playerSkill.Dice));
+            context.DiceClash.AddDice(BattleSide.Enemy, RollRopeBiasDice(rope.IsLeading(BattleSide.Enemy), rope, MinClashBias, MaxClashBias, enemySkill.Dice));
+            context.AddPower(BattleSide.Player, context.DiceClash.TotalPlayerValue);
+            context.AddPower(BattleSide.Enemy, context.DiceClash.TotalEnemyValue);
 
             FireEffects(BattleTriggerActions.AfterClashRoll, context);
 
@@ -95,44 +95,46 @@ public static class BattleFunctions
             SearchForEffect(BattleTriggerActions.ClashWin, context, result.Winner);
             SearchForEffect(BattleTriggerActions.ClashLose, context, result.Winner == BattleSide.Player ? BattleSide.Enemy : BattleSide.Player);
 
-            DiceResult pointsGainDie = RollRopeBiasDice(
+            context.DicePointsGain.AddDice(result.Winner,
+                RollRopeBiasDice(
                 !context.Rope.IsLeading(result.Winner),
-                context.Rope, MinPointsBias, MaxPointsBias, winnerSkill.Points);
-            DiceResult pointsCostDie = RollDice(winnerSkill.PointsRequired);
+                context.Rope, MinPointsBias, MaxPointsBias, winnerSkill.Points));
 
-            context.DicePointsGain.AddDice(result.Winner, pointsGainDie.RolledValues);
-            context.DicePointsCost.AddDice(result.Winner, pointsCostDie.RolledValues);
+            context.DicePointsCost.AddDice(result.Winner,
+                RollDice(winnerSkill.PointsRequired));
 
-            pointsCostDie = new(Mathf.Max(pointsCostDie.TotalValue, 1), pointsCostDie.RolledValues);
+            FireEffects(BattleTriggerActions.AfterPointDiceRoll, context);
 
-            result = new(result.Winner, result.WasTie, pointsGainDie.TotalValue, pointsCostDie.TotalValue);
+            result = new(result.Winner, result.WasTie,
+                context.GetWinnerPointsGain(result.Winner),
+                Mathf.Max(context.GetWinnerPointsCost(result.Winner), 1));
 
             FireEffects(BattleTriggerActions.SkillEnd, context);
 
             return result;
         }
 
-        private static DiceResult RollDice(params DieData[] dice)
+        private static int[] RollDice(params DieData[] dice)
         {
             List<int> result = new();
 
             foreach (DieData die in dice)
                 result.Add(die.BaseValue + Random.Range(die.RangeValue.Min, die.RangeValue.Max + 1));
             
-            return new(GetTotalOfArray(result.ToArray()), result.ToArray());
+            return result.ToArray();
         }
 
-        private static DiceResult RollBiasDice(float bias, bool skewHigh, params DieData[] dice)
+        private static int[] RollBiasDice(float bias, bool skewHigh, params DieData[] dice)
         {
             List<int> result = new();
 
             foreach (DieData die in dice)
                 result.Add(die.BaseValue + SkewedRandom(die.RangeValue.Min, die.RangeValue.Max, bias, skewHigh));
             
-            return new(GetTotalOfArray(result.ToArray()), result.ToArray());
+            return result.ToArray();
         }
 
-        private static DiceResult RollRopeBiasDice(bool skewHigh, BattleRope rope, float minPercentage = 0, float maxPercentage = 1, params DieData[] dice)
+        private static int[] RollRopeBiasDice(bool skewHigh, BattleRope rope, float minPercentage = 0, float maxPercentage = 1, params DieData[] dice)
         {
             float bias = 1 + (rope.RopePercentage(minPercentage, maxPercentage) * DiceBiasMultiplication);
 
@@ -174,6 +176,7 @@ public static class BattleFunctions
     }
     public static class Misc
     {
+        [HideInCallstack]
         public static bool CheckForErrorNone(BattleSide side)
         {
             if (side == BattleSide.None)
@@ -183,9 +186,22 @@ public static class BattleFunctions
             }
             return false;
         }
+
+        [HideInCallstack]
         public static bool CheckForErrorNone(BattleTriggerActions trigger)
         {
             if (trigger == BattleTriggerActions.None)
+            {
+                ErrorLogger.LogErrorType(ErrorLogger.ErrorType.NoneType);
+                return true;
+            }
+            return false;
+        }
+
+        [HideInCallstack]
+        public static bool CheckForErrorNone(SkillDiceType die)
+        {
+            if (die == SkillDiceType.None)
             {
                 ErrorLogger.LogErrorType(ErrorLogger.ErrorType.NoneType);
                 return true;

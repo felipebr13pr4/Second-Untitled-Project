@@ -10,5 +10,4 @@ public struct DiceResult
         m_totalValue = totalValue;
         m_rolledValues = rolledValues;
     }
-
 }
