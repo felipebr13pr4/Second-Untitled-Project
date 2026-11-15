@@ -8,7 +8,8 @@ public class BattleCodeTester : MonoBehaviour
     [SerializeField] private BattleConfig m_config;
     [SerializeField] private BattleRope m_battleRope;
     [SerializeField] private SkillData[] m_skills;
-    private ClashContext.DiceContext m_diceContext = new();
+    private SideState m_sideTestPlayer = new();
+    private SideState m_sideTestEnemy = new();
 
     private void OnEnable()
     {
@@ -84,51 +85,50 @@ public class BattleCodeTester : MonoBehaviour
         int[] c = { 5, 6 };
         int[] d = { 6 };
 
-        m_diceContext.AddDice(BattleSide.Player, a);
-        ErrorLogger.LogVar(m_diceContext.PlayerDiceRolled.Count, nameof(m_diceContext.PlayerDiceRolled.Count));
-        ErrorLogger.LogArray(m_diceContext.PlayerDiceRolled.ToArray());
+        m_sideTestPlayer.DiceClash.AddDice(a);
+        ErrorLogger.LogVar(m_sideTestPlayer.DiceClash.DiceRolled.Count, nameof(m_sideTestPlayer.DiceClash.DiceRolled.Count));
+        ErrorLogger.LogArray(m_sideTestPlayer.DiceClash.DiceRolled.ToArray());
 
 
-        m_diceContext.AddDiceAt(BattleSide.Player, b, 1);
-        ErrorLogger.LogVar(m_diceContext.PlayerDiceRolled.Count, nameof(m_diceContext.PlayerDiceRolled.Count));
-        ErrorLogger.LogArray(m_diceContext.PlayerDiceRolled.ToArray());
+        m_sideTestPlayer.DiceClash.AddDiceAt(b, 1);
+        ErrorLogger.LogVar(m_sideTestPlayer.DiceClash.DiceRolled.Count, nameof(m_sideTestPlayer.DiceClash.DiceRolled.Count));
+        ErrorLogger.LogArray(m_sideTestPlayer.DiceClash.DiceRolled.ToArray());
 
 
-        m_diceContext.AddDiceAt(BattleSide.Player, c, 1);
-        ErrorLogger.LogVar(m_diceContext.PlayerDiceRolled.Count, nameof(m_diceContext.PlayerDiceRolled.Count));
-        ErrorLogger.LogArray(m_diceContext.PlayerDiceRolled.ToArray());
+        m_sideTestPlayer.DiceClash.AddDiceAt(c, 1);
+        ErrorLogger.LogVar(m_sideTestPlayer.DiceClash.DiceRolled.Count, nameof(m_sideTestPlayer.DiceClash.DiceRolled.Count));
+        ErrorLogger.LogArray(m_sideTestPlayer.DiceClash.DiceRolled.ToArray());
 
 
-        m_diceContext.RemoveLastDie(BattleSide.Player);
-        ErrorLogger.LogVar(m_diceContext.PlayerDiceRolled.Count, nameof(m_diceContext.PlayerDiceRolled.Count));
-        ErrorLogger.LogArray(m_diceContext.PlayerDiceRolled.ToArray());
+        m_sideTestPlayer.DiceClash.RemoveLastDie();
+        ErrorLogger.LogVar(m_sideTestPlayer.DiceClash.DiceRolled.Count, nameof(m_sideTestPlayer.DiceClash.DiceRolled.Count));
+        ErrorLogger.LogArray(m_sideTestPlayer.DiceClash.DiceRolled.ToArray());
 
 
-        m_diceContext.RemoveDiceAt(BattleSide.Player, 0);
-        ErrorLogger.LogVar(m_diceContext.PlayerDiceRolled.Count, nameof(m_diceContext.PlayerDiceRolled.Count));
-        ErrorLogger.LogArray(m_diceContext.PlayerDiceRolled.ToArray());
+        m_sideTestPlayer.DiceClash.RemoveDiceAt(0);
+        ErrorLogger.LogVar(m_sideTestPlayer.DiceClash.DiceRolled.Count, nameof(m_sideTestPlayer.DiceClash.DiceRolled.Count));
+        ErrorLogger.LogArray(m_sideTestPlayer.DiceClash.DiceRolled.ToArray());
 
 
-        m_diceContext.RemoveDiceByValue(BattleSide.Player, d);
-        ErrorLogger.LogVar(m_diceContext.PlayerDiceRolled.Count, nameof(m_diceContext.PlayerDiceRolled.Count));
-        ErrorLogger.LogArray(m_diceContext.PlayerDiceRolled.ToArray());
+        m_sideTestPlayer.DiceClash.RemoveDiceByValue(d);
+        ErrorLogger.LogVar(m_sideTestPlayer.DiceClash.DiceRolled.Count, nameof(m_sideTestPlayer.DiceClash.DiceRolled.Count));
+        ErrorLogger.LogArray(m_sideTestPlayer.DiceClash.DiceRolled.ToArray());
 
 
-        m_diceContext.AddDice(BattleSide.None, d);
-        ErrorLogger.LogVar(m_diceContext.PlayerDiceRolled.Count, nameof(m_diceContext.PlayerDiceRolled.Count));
-        ErrorLogger.LogArray(m_diceContext.PlayerDiceRolled.ToArray());
+        m_sideTestPlayer.DiceClash.AddDice(d);
+        ErrorLogger.LogVar(m_sideTestPlayer.DiceClash.DiceRolled.Count, nameof(m_sideTestPlayer.DiceClash.DiceRolled.Count));
+        ErrorLogger.LogArray(m_sideTestPlayer.DiceClash.DiceRolled.ToArray());
+
+        ErrorLogger.LogVar(m_sideTestEnemy.DiceClash, nameof(m_sideTestEnemy.DiceClash));
+        ErrorLogger.LogArray(m_sideTestEnemy.DiceClash.DiceRolled.ToArray());
 
 
-        ErrorLogger.LogVar(m_diceContext.EnemyDiceRolled, nameof(m_diceContext.EnemyDiceRolled));
-        ErrorLogger.LogArray(m_diceContext.EnemyDiceRolled.ToArray());
+        m_sideTestPlayer.DiceClash.RemoveLastDie();
+        ErrorLogger.LogVar(m_sideTestPlayer.DiceClash.DiceRolled.Count, nameof(m_sideTestPlayer.DiceClash.DiceRolled.Count));
+        ErrorLogger.LogArray(m_sideTestPlayer.DiceClash.DiceRolled.ToArray());
 
-
-        m_diceContext.RemoveLastDie(BattleSide.Enemy);
-        ErrorLogger.LogVar(m_diceContext.PlayerDiceRolled.Count, nameof(m_diceContext.PlayerDiceRolled.Count));
-        ErrorLogger.LogArray(m_diceContext.PlayerDiceRolled.ToArray());
-
-        ErrorLogger.LogVar(m_diceContext.EnemyDiceRolled.Count, nameof(m_diceContext.EnemyDiceRolled.Count));
-        ErrorLogger.LogArray(m_diceContext.EnemyDiceRolled.ToArray());
+        ErrorLogger.LogVar(m_sideTestEnemy.DiceClash.DiceRolled.Count, nameof(m_sideTestEnemy.DiceClash.DiceRolled.Count));
+        ErrorLogger.LogArray(m_sideTestEnemy.DiceClash.DiceRolled.ToArray());
 
     }
 

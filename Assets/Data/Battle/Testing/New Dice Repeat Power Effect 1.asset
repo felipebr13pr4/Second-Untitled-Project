@@ -16,6 +16,6 @@ MonoBehaviour:
   m_repeatNumber: 2
   m_repeatAmount: 2
   m_multiplication: 2
-  m_dieToReplace: 475
-  m_dieMaxValueIndex: 1166
+  m_dieToReplace: 0
+  m_dieMaxValueIndex: 0
   m_dieTypeToChange: 2

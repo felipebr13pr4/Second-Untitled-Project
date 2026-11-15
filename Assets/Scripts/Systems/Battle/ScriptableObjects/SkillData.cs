@@ -62,18 +62,16 @@ public class SkillData : ScriptableObject
             ErrorLogger.CheckForErrorNegativeArray(dieIndex))
             return 0;
 
-        int value = 0;
-
         switch (diceType)
         {
             case SkillDiceType.Clash:
-                return value += m_dice[dieIndex].BaseValue + m_dice[dieIndex].RangeValue.Max;
+                return m_dice[dieIndex].BaseValue + m_dice[dieIndex].RangeValue.Max;
 
             case SkillDiceType.Points:
-                return value += m_points.BaseValue + m_points.RangeValue.Max;
+                return m_points.BaseValue + m_points.RangeValue.Max;
 
             case SkillDiceType.Cost:
-                return value += m_pointsRequired.BaseValue + m_pointsRequired.RangeValue.Max;
+                return m_pointsRequired.BaseValue + m_pointsRequired.RangeValue.Max;
 
             default:
                 ErrorLogger.LogErrorType(ErrorLogger.ErrorType.NoneType);

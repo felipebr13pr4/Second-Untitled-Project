@@ -17,6 +17,10 @@ MonoBehaviour:
   - m_baseValue: 0
     m_rangeValue:
       m_min: 0
+      m_max: 0
+  - m_baseValue: 0
+    m_rangeValue:
+      m_min: 0
       m_max: 5
   m_points:
     m_baseValue: 0

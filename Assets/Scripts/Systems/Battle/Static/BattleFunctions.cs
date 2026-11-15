@@ -51,10 +51,10 @@ public static class BattleFunctions
 
             FireEffects(BattleTriggerActions.Use, context);
 
-            context.DiceClash.AddDice(BattleSide.Player, RollRopeBiasDice(rope.IsLeading(BattleSide.Player), rope, MinClashBias, MaxClashBias, playerSkill.Dice));
-            context.DiceClash.AddDice(BattleSide.Enemy, RollRopeBiasDice(rope.IsLeading(BattleSide.Enemy), rope, MinClashBias, MaxClashBias, enemySkill.Dice));
-            context.AddPower(BattleSide.Player, context.DiceClash.TotalPlayerValue);
-            context.AddPower(BattleSide.Enemy, context.DiceClash.TotalEnemyValue);
+            context.Player.DiceClash.AddDice(RollRopeBiasDice(rope.IsLeading(BattleSide.Player), rope, MinClashBias, MaxClashBias, playerSkill.Dice));
+            context.Enemy.DiceClash.AddDice(RollRopeBiasDice(rope.IsLeading(BattleSide.Enemy), rope, MinClashBias, MaxClashBias, enemySkill.Dice));
+            context.AddPower(BattleSide.Player, context.Player.DiceClash.TotalValue);
+            context.AddPower(BattleSide.Enemy, context.Enemy.DiceClash.TotalValue);
 
             FireEffects(BattleTriggerActions.AfterClashRoll, context);
 
@@ -95,12 +95,12 @@ public static class BattleFunctions
             SearchForEffect(BattleTriggerActions.ClashWin, context, result.Winner);
             SearchForEffect(BattleTriggerActions.ClashLose, context, result.Winner == BattleSide.Player ? BattleSide.Enemy : BattleSide.Player);
 
-            context.DicePointsGain.AddDice(result.Winner,
+            context.GetSide(result.Winner).DicePointsGain.AddDice(
                 RollRopeBiasDice(
                 !context.Rope.IsLeading(result.Winner),
                 context.Rope, MinPointsBias, MaxPointsBias, winnerSkill.Points));
 
-            context.DicePointsCost.AddDice(result.Winner,
+            context.GetSide(result.Winner).DicePointsCost.AddDice(
                 RollDice(winnerSkill.PointsRequired));
 
             FireEffects(BattleTriggerActions.AfterPointDiceRoll, context);

@@ -8,8 +8,8 @@ public class DiceLogEffect : SkillEffect
     {
         ErrorLogger.DebugLog($"Log effect fired at {FireTrigger} by {owner}");
         ErrorLogger.DebugLog($"Player clash die results:");
-        ErrorLogger.LogArray(context.DiceClash.PlayerDiceRolled.ToArray());
+        ErrorLogger.LogArray(context.Player.DiceClash.DiceRolled.ToArray());
         ErrorLogger.DebugLog($"Enemy clash die results:");
-        ErrorLogger.LogArray(context.DiceClash.EnemyDiceRolled.ToArray());
+        ErrorLogger.LogArray(context.Enemy.DiceClash.DiceRolled.ToArray());
     }
 }
